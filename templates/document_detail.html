@@ -1,0 +1,127 @@
+{#{% extends 'base.html' %}#}
+{##}
+{#{% block title %}办件详情{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container-fluid px-5 py-5">#}
+{#    <div class="container bg-light shadow rounded px-5 py-5">#}
+{#        <h2 class="text-center mb-4">办件详情</h2>#}
+{#        <div class="card">#}
+{#            <div class="card-body">#}
+{#                <p class="card-text">办件名: <strong>{{ document.title }}</strong></p>#}
+{#                <p class="card-text">办件备注: <strong>{{ document.content }}</strong></p>#}
+{#                <p class="card-text">收件人: <strong>{{ document.creator }}</strong></p>#}
+{#                <p class="card-text">承接部门: <strong>{{ document.department }}</strong></p>#}
+{#                <p class="card-text">截至日期: <strong>{{ document.due_date }}</strong></p>#}
+{#                <p class="card-text">状态: <strong>{{ document.status }}</strong></p>#}
+{#                <p class="card-text">流转部门:<strong>{{ document.ordered_departments_text }}</strong></p>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="mt-5">#}
+{#            <h1 class="text-center">历史记录</h1>#}
+{#            <div class="table-responsive mt-4">#}
+{#                <table class="table table-striped">#}
+{#                    <thead>#}
+{#                    <tr>#}
+{#                        <th>修改时间</th>#}
+{#                        <th>原状态</th>#}
+{#                        <th>新状态</th>#}
+{#                        <th>修改用户</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    {% for history in document.history.all %}#}
+{#                        {% if history.instance.status == "未接收" %}#}
+{#                            <tr class="table-info">#}
+{#                                <td colspan="4">----- 新建办件 -----</td>#}
+{#                            </tr>#}
+{#                        {% endif %}#}
+{#                        {% if history.instance.status == "已流转" %}#}
+{#                            <tr class="table-warning">#}
+{#                                <td colspan="4">----- 办件流转 -----</td>#}
+{#                            </tr>#}
+{#                        {% endif %}#}
+{#                        <tr>#}
+{#                            <td>{{ history.history_date }}</td>#}
+{#                            <td>#}
+{#                                {% if history.prev_record %}#}
+{#                                    {{ history.prev_record.status }}#}
+{#                                {% else %}#}
+{#                                    无#}
+{#                                {% endif %}#}
+{#                            </td>#}
+{#                            <td>{{ history.instance.status }}</td>#}
+{#                            <td>{{ history.history_change_reason }}</td>#}
+{#                        </tr>#}
+{#                    {% endfor %}#}
+{#                    </tbody>#}
+{#                </table>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
+{% extends 'base.html' %}
+
+{% block title %}办件详情{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-5 py-lg-5">
+    <div class="container bg-light shadow rounded-lg px-lg-5 py-lg-5 mx-auto" style="max-width: 100%;">
+        <h2 class="text-center mb-4">办件详情</h2>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">办件名: <strong>{{ document.title }}</strong></p>
+                <p class="card-text">办件类: <strong>{{ document.category }}</strong></p>
+                <p class="card-text">办件备注: <strong>{{ document.content }}</strong></p>
+                <p class="card-text">收件人: <strong>{{ document.creator }}</strong></p>
+                <p class="card-text">承接部门: <strong>{{ document.department }}</strong></p>
+                <p class="card-text">截至日期: <strong>{{ document.due_date }}</strong></p>
+                <p class="card-text">状态: <strong>{{ document.status }}</strong></p>
+                <p class="card-text">流转部门:<strong>{{ document.ordered_departments_text }}</strong></p>
+            </div>
+        </div>
+        <div class="mt-5">
+            <h1 class="text-center">历史记录</h1>
+            <div class="table-responsive mt-4">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>修改时间</th>
+                        <th>原状态</th>
+                        <th>新状态</th>
+                        <th>修改用户</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for history in document.history.all %}
+                        {% if history.instance.status == "未接收" %}
+                            <tr class="table-info">
+                                <td colspan="4">----- 新建办件 -----</td>
+                            </tr>
+                        {% endif %}
+                        {% if history.instance.status == "已流转" %}
+                            <tr class="table-warning">
+                                <td colspan="4">----- 办件流转 -----</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>{{ history.history_date }}</td>
+                            <td>
+                                {% if history.prev_record %}
+                                    {{ history.prev_record.status }}
+                                {% else %}
+                                    无
+                                {% endif %}
+                            </td>
+                            <td>{{ history.instance.status }}</td>
+                            <td>{{ history.history_change_reason }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

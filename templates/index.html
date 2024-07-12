@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        {% if user.is_authenticated %}
+            <div class="container mt-3">
+               <p class="h4 text-center">欢迎，{{ user.username }}!</p>
+                <ul class="list-group">
+                    {% if user.employee.department.department_type == 'gov' %}
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'create_document' %}">创件</a></li>
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'document_list' %}">列表</a></li>
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'search_documents' %}">查询</a></li>
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'update_delivery_time' %}">递件</a></li>
+                    {% else %}
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'document_list' %}">列表</a></li>
+                    {% endif %}
+                    <!-- 添加其他链接 -->
+                </ul>
+            </div>
+        {% else %}
+            <div class="container mt-3">
+                <p>未登录，请先登录</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

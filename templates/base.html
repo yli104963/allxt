@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}多部门协同系统{% endblock %}</title>
+    <link href="/static/base.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="/static/tc.css" rel="stylesheet">
+    <style>
+        body{
+            background: linear-gradient(to left, #e6e9f0 0%, #eef1f5 100%);
+}
+        nav{
+    background: linear-gradient(to left, #e6e9f0 0%, #eef1f5 100%);
+}
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="/"><img width="30" height="30" src="/media/logo.png" alt="logo"> 协同系统</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'document_list' %}">列表</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'logout' %}">退出</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="{% url 'login' %}">登录</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+    {% block content %}
+        <!-- Default content block -->
+    {% endblock %}
+</div>
+
+<script src="/static/base.js" crossorigin="anonymous"></script>
+<script src="/static/tc.js"></script>
+
+</body>
+</html>

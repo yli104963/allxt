@@ -1,0 +1,61 @@
+{#{% extends 'base.html' %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="container mt-5">#}
+{#        <h1>批量更新递送资料时间</h1>#}
+{#        <form method="post">#}
+{#            {% csrf_token %}#}
+{#            <div class="mb-3">#}
+{#                <label for="delivery_time" class="form-label">递送资料时间:</label>#}
+{#                <input type="datetime-local" class="form-control" id="delivery_time" name="delivery_time" required>#}
+{#            </div>#}
+{#            <div class="mb-3">#}
+{#                <label for="documents_to_update" class="form-label">选择要更新的办件:</label>#}
+{#                <div class="list-group">#}
+{#                    {% for document in documents %}#}
+{#                        <div class="list-group-item">#}
+{#                            <input type="checkbox" id="document_{{ document.id }}" name="documents_to_update" value="{{ document.id }}">#}
+{#                            <label for="document_{{ document.id }}">{{ document.title }}</label>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
+{#            <button type="submit" class="btn btn-primary">批量更新递送资料时间</button>#}
+{#        </form>#}
+{#    </div>#}
+{#{% endblock %}#}
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>批量更新递送资料时间</h1>
+        <!-- 新增部分：选择日期 -->
+        <form method="get" class="mb-3">
+            <div class="form-group">
+                <label for="date">选择日期:</label>
+                <input type="date" class="form-control" id="date" name="date" value="{{ request.GET.date }}">
+                <button type="submit" class="btn btn-primary mt-2">查看</button>
+            </div>
+        </form>
+        <!-- 结束新增部分 -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="delivery_time" class="form-label">递送资料时间:</label>
+                <input type="datetime-local" class="form-control" id="delivery_time" name="delivery_time" required>
+            </div>
+            <div class="mb-3">
+                <label for="documents_to_update" class="form-label">选择要更新的办件:</label>
+                <div class="list-group">
+                    {% for document in documents %}
+                        <div class="list-group-item">
+                            <input type="checkbox" id="document_{{ document.id }}" name="documents_to_update" value="{{ document.id }}">
+                            <label for="document_{{ document.id }}">{{ document.title }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">批量更新递送资料时间</button>
+        </form>
+    </div>
+{% endblock %}

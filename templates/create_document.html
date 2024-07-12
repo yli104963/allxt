@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">创建办件</h1>
+        <form method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">办件名:</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">分类:</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="">选择分类</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">备注:</label>
+                <input type="text" class="form-control" id="content" name="content" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="submitter_name" class="form-label">递交人姓名:</label>
+                <input type="text" class="form-control" id="submitter_name" name="submitter_name" required>
+                <div id="nameError" class="invalid-feedback" style="display:none;">姓名不能为空且不能超过100个字符</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="submitter_id_card" class="form-label">递交人身份证号:</label>
+                <input type="text" class="form-control" id="submitter_id_card" name="submitter_id_card" required>
+                <div id="idCardError" class="invalid-feedback" style="display:none;">身份证号不能为空且必须为18位</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="submitter_phone" class="form-label">递交人手机号:</label>
+                <input type="text" class="form-control" id="submitter_phone" name="submitter_phone" required>
+                <div id="phoneError" class="invalid-feedback" style="display:none;">手机号不能为空且必须为11位</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="due_date" class="form-label">截至日期:</label>
+                <input type="date" class="form-control" id="due_date" name="due_date" required>
+            </div>
+
+            <!-- 如果用户是政务中心用户，则显示选择承接部门的字段 -->
+            {% if user.employee.department.department_type == 'gov' %}
+                <div class="mb-3">
+                    <label for="department" class="form-label">承接部门:</label>
+                    <select class="form-select" id="department" name="department" required>
+                        <option value="">选择部门</option>
+                        {% for department in departments %}
+                            <option value="{{ department.id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">创建</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById('submitter_name').value;
+            var idCard = document.getElementById('submitter_id_card').value;
+            var phone = document.getElementById('submitter_phone').value;
+
+            // 姓名验证
+            if (!isValidName(name)) {
+                document.getElementById('nameError').style.display = 'block';
+                return false;
+            } else {
+                document.getElementById('nameError').style.display = 'none';
+            }
+
+            // 身份证号验证
+            if (!isValidIdCard(idCard)) {
+                document.getElementById('idCardError').style.display = 'block';
+                return false;
+            } else {
+                document.getElementById('idCardError').style.display = 'none';
+            }
+
+            // 手机号验证
+            if (!isValidPhone(phone)) {
+                document.getElementById('phoneError').style.display = 'block';
+                return false;
+            } else {
+                document.getElementById('phoneError').style.display = 'none';
+            }
+
+            return true;
+        }
+
+        function isValidName(name) {
+            return name.trim() !== '' && name.length <= 100;
+        }
+
+        function isValidIdCard(idCard) {
+            return idCard.trim() !== '' && idCard.length === 18;
+        }
+
+        function isValidPhone(phone) {
+            return phone.trim() !== '' && phone.length === 11;
+        }
+    </script>
+{% endblock %}

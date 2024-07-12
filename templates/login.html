@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        {% if user.is_authenticated %}
+            <div class="container mt-3">
+                <p class="h4 text-center">欢迎，{{ user.username }}!</p>
+                <ul class="list-group">
+                    {% if user.employee.department.department_type == 'gov' %}
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'create_document' %}">创件</a></li>
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'document_list' %}">列表</a></li>
+                    {% else %}
+                        <li class="list-group-item"><a class="text-decoration-none" href="{% url 'document_list' %}">列表</a></li>
+                    {% endif %}
+                    <!-- 添加其他链接 -->
+                </ul>
+            </div>
+        {% else %}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-lg rounded">
+                    <div class="card-header bg-light text-black text-center fw-bold py-3">登录</div>
+                    <div class="card-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="username" class="form-label">用户名</label>
+                                <input type="text" class="form-control bg-light border-0 rounded" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">密 码</label>
+                                <input type="password" class="form-control bg-light border-0 rounded" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary rounded shadow" style="width:100%;">确认</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

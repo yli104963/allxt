@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">办件列表</h1>
+        <form method="get" action="{% url 'document_list' %}">
+            <div class="mb-3">
+                <label for="status" class="form-label">状态:</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="">全部状态</option>
+                    <option value="未接收">未接收</option>
+                    <option value="处理中">处理中</option>
+                    <option value="已完成">已完成</option>
+                    <option value="已流转">已流转</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-check-label">紧急状态:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="is_urgent" name="is_urgent" value="true">
+                    <label class="form-check-label" for="is_urgent">是</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-check-label">超时状态:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="is_overdue" name="is_overdue" value="true">
+                    <label class="form-check-label" for="is_overdue">是</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">筛选</button>
+        </form>
+
+        <br>
+        <!-- Desktop version (shown on md screens and above) -->
+        <div class="d-none d-md-block table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>办件名</th>
+                    <th>状态</th>
+                    <th>创建者</th>
+                    <th>创建时间</th>
+                    <th>承接部门</th>
+                    <th>紧急状态</th>
+                    <th>超时状态</th>
+                    <th>递送资料时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for document in documents %}
+                    <tr>
+                        <td>{{ document.title }}</td>
+                        <td>{{ document.status }}</td>
+                        <td>{{ document.creator }}</td>
+                        <td>{{ document.assigned_at }}</td>
+                        <td>{{ document.department }}</td>
+                        <td>{% if document.is_urgent %}<span class="text-danger">紧急</span>{% else %}
+                            <span class="text-success">正常</span>{% endif %}</td>
+                        <td>{% if document.is_overdue %}<span class="text-danger">超时</span>{% else %}
+                            <span class="text-success">正常</span>{% endif %}</td>
+                        <td>{{ document.delivery_time|default:"未递送资料" }}</td>
+                        <td>
+                            <a href="{% url 'document_detail' document.id %}" class="btn btn-primary btn-sm">详情</a>
+                            <a href="{% url 'process_document' document.id %}" class="btn btn-success btn-sm">处理</a>
+                            <a href="{% url 'transit_document' document.id %}" class="btn btn-info btn-sm">流转</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile version (shown on screens smaller than md) -->
+        <div class="d-md-none">
+            {% for document in documents %}
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">{{ document.title }}</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">状态: {{ document.status }}</li>
+                        <li class="list-group-item">创建者: {{ document.creator }}</li>
+                        <li class="list-group-item">创建时间: {{ document.assigned_at }}</li>
+                        <li class="list-group-item">承接部门: {{ document.department }}</li>
+                        <li class="list-group-item">
+                            紧急状态:
+                            {% if document.is_urgent %}
+                                <span class="btn btn-sm btn-danger">紧急</span>
+                            {% else %}
+                                <span class="btn btn-sm btn-inverse">正常</span>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            超时状态:
+                            {% if document.is_overdue %}
+                                <span class="btn btn-sm btn-danger">超时</span>
+                            {% else %}
+                                <span class="btn btn-sm btn-inverse">正常</span>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'document_detail' document.id %}" class="btn btn-primary btn-sm">详情</a>
+                            <a href="{% url 'process_document' document.id %}" class="btn btn-success btn-sm">处理</a>
+                            <a href="{% url 'transit_document' document.id %}" class="btn btn-info btn-sm">流转</a>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
